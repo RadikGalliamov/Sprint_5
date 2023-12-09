@@ -5,15 +5,22 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
+"""
+Добавляем параметр запуска тестов в командной строке(выбор браузера, по умолчанию хром, язык)
+"""
 
-# Добавляем параметр запуска тестов в командной строке(выбор браузера, по умолчанию хром, язык)
+
 def pytest_addoption(parser):
     parser.addoption('--browser_name', action='store', default="chrome", help="Choose browser: chrome or firefox")
     parser.addoption('--language', action='store', default='ru',
                      help='Choose language browser: ru,en,fr...')
 
 
-# Запуск браузера
+"""
+Запуск браузера
+"""
+
+
 @pytest.fixture(scope="function")  # запускается для каждого теста
 def browser(request):
     browser_name = request.config.getoption("browser_name")
@@ -29,6 +36,7 @@ def browser(request):
     else:
         raise pytest.UsageError("--browser_name should be chrome or firefox")
 
+    browser.set_window_size(1920, 1080)  # Устанавливаем разрешение окна браузера
+
     yield browser
     browser.quit()
-
